@@ -24,6 +24,7 @@ from heapq import heappop, heappush
 with open('input_11.txt', 'r') as f:
     data = f.read().strip()
 
+
 def hash_state(s):
     return hash(tuple(s[1]))
 
@@ -73,7 +74,6 @@ class Solver(object):
         return valid
 
     def get_possible_moves(self, source_state):
-        output = []
         distance, s = source_state
         current_floor_contents = list(filter(None, [s[s[0]] & c for c in self.components]))
         floors = [s[0] + 1, ] if s[0] == 1 else [s[0] - 1, ] if s[0] == 4 else [s[0] + 1, s[0] - 1]
@@ -86,8 +86,7 @@ class Solver(object):
                 s_move[new_floor] += c
                 s_move[s[0]] -= c
                 if self.isvalid(s_move[new_floor]) and self.isvalid(s_move[s[0]]):
-                    output.append([distance + 1, s_move])
-        return output
+                    yield [distance + 1, s_move]
 
     def run(self):
         q = []
