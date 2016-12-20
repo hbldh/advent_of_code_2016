@@ -18,8 +18,10 @@ from collections import namedtuple
 from itertools import combinations
 try:
     from queue import PriorityQueue
+    _range = range
 except ImportError:
     from Queue import PriorityQueue
+    _range = xrange
 
 state_tuple = namedtuple('state', ['d', 'e', 'F1', 'F2', 'F3', 'F4'])
 
@@ -39,6 +41,46 @@ The third floor contains a promethium generator, a promethium-compatible microch
 The fourth floor contains nothing relevant.
 """
 initial_state_2 = state_tuple(d=0, e='F1', F1=['thG', 'thM', 'plG', 'stG', 'elG', 'elM', 'diG', 'diM'], F2=['plM', 'stM'], F3=['prG', 'prM', 'ruG', 'ruM'], F4=[])
+
+
+def solver(input_data):
+    all_elements = re.findall('([\w]*) generator', input_data, re.M)
+    mapping = {}
+    mchips = []
+    gens = []
+    valid_dict = {}
+
+    # Create bitmask for object.
+    for i, element in enumerate(all_elements):
+        mapping["{0} generator".format(element)] = 2 ** (i * 2)
+        mapping["{0}-compatible microchip".format(element)] = 2 ** ((i * 2) + 1)
+        gens.append(2 ** (i * 2))
+        mchips.append(2 ** ((i * 2) + 1))
+    G = sum(gens)
+    for i in _range(2 ** ((len(mapping) + 1) * 2)):
+        for g in gens:
+
+    def isvalid(v):
+
+        for m, g in zip(mchips, gens):
+            (v & m) & (v & g)
+    isvalid(int('1011',2))
+    # For each microchip, register invalid configurations
+    invalid_states = {}
+    #for i, element in enumerate(all_elements):
+    #    for j, element in enumerate(all_elements)
+
+    floors = [1, 0, 0, 0, 0]
+    for i, floor_start in enumerate(input_data.strip().splitlines()):
+        generators = re.findall('([\w]* generator)', floor_start)
+        for g in generators:
+            floors[i + 1] += mapping[g]
+        microchip = re.findall('(\w*-compatible microchip)', floor_start)
+        for m in microchip:
+            floors[i + 1] += mapping[m]
+
+solver(data_2)
+
 
 
 def is_valid(s):
@@ -102,8 +144,10 @@ t = time.time()
 solution_1 = solve(data_1, initial_state_1)
 print("[Part 1] Minimum number of steps: {0} (Runtime: {1:.2f} s)".format(solution_1.d, time.time() - t))
 
-t = time.time()
-print("N.B. Runtime of part 2 is at least 15 minutes...")
-solution_2 = solve(data_2, initial_state_2)
-print("[Part 2] Minimum number of steps: {0} (Runtime: {1:.2f} s)".format(solution_2.d, time.time() - t))
+#t = time.time()
+#print("N.B. Runtime of part 2 is at least 15 minutes...")
+#solution_2 = solve(data_2, initial_state_2)
+#print("[Part 2] Minimum number of steps: {0} (Runtime: {1:.2f} s)".format(solution_2.d, time.time() - t))
+
+
 
